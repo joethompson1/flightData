@@ -19,19 +19,19 @@ const fetchDataAndAppend = async () => {
     if (currentTime.getMonth() !== lastMonth) {
         lastMonth = currentTime.getMonth();
         numberOfRequests = 0;
-        console.log(`Request counter reset for new month: ${currentMonth}`);
+        console.log(`REQUEST COUNTER RESET FOR NEW MONTH: ${currentTime.getMonth() }`);
     }
 
-    console.log("Request number: ", numberOfRequests);
-
     try {
-        if ((numberOfRequests < 9990) || (currentTime.getHours() >= startHour && currentTime.getHours() < endHour)) {
+        if ((numberOfRequests < 9990) && (currentTime.getHours() >= startHour && currentTime.getHours() < endHour)) {
 
             const flightsObject = await aircraft1NM(latitude, longitude);
             numberOfRequests++;
+            console.log(`-------- Request: ${numberOfRequests} --------`);
+            console.log(currentTime);
 
             if (flightsObject.total > 0) {
-                console.log("Flight found: interval changed to 20s");
+                console.log("Flight found: interval set to 20s");
                 intervalTime = 20000; 
                 // Read the existing content of the file
                 fs.readFile('flightData.json', 'utf8', (err, data) => {
@@ -64,7 +64,7 @@ const fetchDataAndAppend = async () => {
                 });
             } else {
                 intervalTime = 90000;
-                console.log('No data to append: interval changed to 1min 30s.');
+                console.log('No data to append: interval set to 1min 30s.');
             }
         } else {
             console.log('Not running outside of 7 AM - 7 PM.');
